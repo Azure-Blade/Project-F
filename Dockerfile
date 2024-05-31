@@ -2,8 +2,8 @@ FROM node:lts-alpine3.20 as base
 
 FROM base AS builder
 
-# RUN apk add --no-cache libc6-compat
 # RUN apk update
+# RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
@@ -16,6 +16,9 @@ RUN npm run build
 
 FROM base AS runner 
 WORKDIR /app
+
+RUN apk update
+RUN apk add argon2
 
 COPY --from=builder /app/public ./public
 
