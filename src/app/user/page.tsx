@@ -5,7 +5,7 @@ import { InferInsertModel } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
-export default async function page() {
+async function createUser() {
   const pass = faker.internet.password();
   const passwordHash = await argon2.hash(pass);
   const user = {
@@ -14,6 +14,11 @@ export default async function page() {
     passwordHash,
   } satisfies InferInsertModel<typeof schema.user>;
   const result = await db.insert(schema.user).values(user);
+  return { result, user };
+}
+
+export default async function Page() {
+  const { user, result } = await createUser();
 
   return (
     <>
